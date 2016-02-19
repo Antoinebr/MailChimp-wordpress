@@ -47,7 +47,14 @@ function form_newsletter() {
       'send_welcome'      => false,
     ));
 
-    echo json_encode($result);
+    if($result['status'] == 'error'){
+      $t['erreur'] = true;
+      $t['erreurGlobal'] = "<em class='erreur state-error'>Nous n'avons pas réussi à ajouter votre adresse à la liste</em>";
+      echo json_encode($t);
+    }else{
+      echo json_encode($result);
+    }
+
     die();
   }
 

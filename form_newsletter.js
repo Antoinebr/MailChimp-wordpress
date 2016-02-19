@@ -39,6 +39,8 @@ $('#newsletter-form-btn').on('click',function(e){
 
         if(data.erreurPrenom) $( ".newsletter-form input[name='prenom']" ).after(data.erreurPrenom);
 
+        if(data.erreurGlobal) $( ".newsletter-form" ).after(data.erreurGlobal);
+
       }
     },
     error : function(request, errorType, errorMessage){
