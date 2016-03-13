@@ -6,10 +6,16 @@ add_action( 'wp_ajax_nopriv_form_newsletter', 'form_newsletter' );
 function form_newsletter() {
 
   $nom = htmlspecialchars($_POST['nom']);
+  $prenom = htmlspecialchars($_POST['prenom']);
   $email = htmlspecialchars($_POST['email']);
 
 
   $t = array();
+
+  if( $prenom == ""){
+    $t['erreurPrenom'] = "<em class='erreur state-error'>Vous devez rentrer votre prenom</em>";
+    $erreur = true;
+  }
 
   if( $nom == ""){
     $t['erreurNom'] = "<em class='erreur state-error'>Vous devez rentrer votre nom</em>";
@@ -17,7 +23,7 @@ function form_newsletter() {
   }
 
   if(!filter_var($email , FILTER_VALIDATE_EMAIL)) {
-    $t['erreurEmail'] = "<em class='erreur state-error'>Votre adresse e-mail n'est pas valide</em>";
+    $t['erreurEmail'] = "<p class='erreur state-error form-error'>Votre adresse e-mail n'est pas valide</p>";
     $erreur = true;
   }
 
@@ -32,8 +38,8 @@ function form_newsletter() {
 
   if($t['erreur'] == false){
 
-    //Inject in MC
-    require 'mailchimp.class.php';
+    // Inject in MC
+    include(dirname(dirname(__FILE__)).'/mailchimp.class.php');
     $apiKey = "57bc6csdadcb979ogo5f3dc62sdsd3f85d-us1";
     $listId = "ca418es0df8";
     $mailchimp = new MailChimp($apiKey);
@@ -52,8 +58,10 @@ function form_newsletter() {
       $t['erreurGlobal'] = "<em class='erreur state-error'>Nous n'avons pas réussi à ajouter votre adresse à la liste</em>";
       echo json_encode($t);
     }else{
-      echo json_encode($result);
+      $t['successMessage'] = "<p>Inscription réussie</p>";
+      echo json_encode($t);
     }
+
 
     die();
   }
